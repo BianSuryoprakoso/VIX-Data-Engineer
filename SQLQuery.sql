@@ -48,3 +48,21 @@ SELECT * FROM DimCustomer
 SELECT * FROM DimProduct
 SELECT * FROM DimStatusOrder
 SELECT * FROM FactSalesOrder
+
+-- Store Procedure
+CREATE PROCEDURE summary_status_order
+(@StatusID int) AS
+BEGIN
+	SELECT fso.OrderID,
+		   c.CustomerName,
+		   p.ProductName, 
+		   fso.Quantity,
+		   s.StatusOrder
+	FROM FactSalesOrder fso
+	JOIN DimCustomer c ON fso.CustomerID = c.CustomerID
+	JOIN DimProduct p ON fso.ProductID = p.ProductID
+	JOIN DimStatusOrder s ON fso.StatusID = s.StatusID
+	WHERE s.StatusID = @StatusID
+END
+
+EXEC summary_status_order @StatusID = 5
